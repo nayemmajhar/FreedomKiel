@@ -16,10 +16,12 @@ $router->get('/', function () use ($router) {
 });
 
 
-$router->group(['prefix' => 'api'], function () use ($router) {
-    $router->get('persons',  ['uses' => 'PersonController@showAllPersons']);
-  
-    $router->get('persons/{id}', ['uses' => 'PersonController@showOnePerson']);
-  
-    $router->post('persons', ['uses' => 'PersonController@create']);
+$router->group(
+    [
+        'prefix' => 'api/users'
+    ], function () use ($router) {
+        $router->get('/',  ['uses' => 'UserController@showAllPersons']);
+        $router->get('/{username}', ['uses' => 'UserController@showUserByUsername']);
+        $router->post('/register', ['uses' => 'UserController@register']);
+        $router->post('/login', ['uses' => 'UserController@login']);
   });
