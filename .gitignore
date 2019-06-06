@@ -4,6 +4,7 @@
 .pnp.js
 /fkapi/database/migrations
 .idea/
+/fkapi/app/User-copy.php
 
 # testing
 /fkweb/coverage
@@ -21,4 +22,5 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+/fkweb/yarn.lock
 
