@@ -1,25 +1,49 @@
 import React from 'react';
-import logo from './logo.svg';
+import { BrowserRouter, Route } from 'react-router-dom';
 import './App.css';
+import Header from './components/Header/index';
+import Footer from './components/Footer';
+
+
 
 function App() {
+	return (
+		<div className="App">
+			
+			<BrowserRouter>
+				<Header />
+				<Route exact path="/" component={Home} />
+				<Route path="/bikes" component={Bikes} />
+				<Route path="/Help" component={Help} />
+				<Footer/>
+			</BrowserRouter>
+			
+		</div>
+	);
+}
+
+
+function Home() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <div>
+        <h2>Home</h2>
+      </div>
+  );
+}
+
+function Bikes() {
+  return (
+      <div>
+        <h2>Bikes</h2>
+      </div>
+  );
+}
+
+function Help() {
+  return (
+      <div>
+        <h2>Help</h2>
+      </div>
   );
 }
 
