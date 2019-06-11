@@ -1,13 +1,21 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+body{
+	
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+#fk-hero{
+    min-height: 450px;
+    background: url(./../img/banner.jpg);
+    background-position: 50% 50%;
+    opacity: .95;
+    margin-bottom: 200px;
+}
+
+.search-wrap{
+    margin-top: 180px;
+    padding: 20px;
+    background: rgb(255, 0, 132);
+}
+
+.form-inline label{
+    margin-right: 10px;
 }

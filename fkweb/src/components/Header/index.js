@@ -6,17 +6,19 @@ import './css/header.css'
 class Header extends React.Component{
     render(){
         return(
-            <header id="fk-header" className="container">
-                <div className="row">
-                    <div className="col-sm-4">
-                        <Logo />
-                    </div>
-                    <div className="col-sm-8">
-                        <div className="row">
-                            <div className="col-sm-9">
-                                <Navigation />
+            <header id="fk-header">
+                <div className="container">
+                    <div className="row">
+                        <div className="col-sm-4">
+                            <Logo />
+                        </div>
+                        <div className="col-sm-8">
+                            <div className="row">
+                                <div className="col-sm-9">
+                                    <Navigation />
+                                </div>
+                                <div className="col-sm-3">Login</div>
                             </div>
-                            <div className="col-sm-3">Login</div>
                         </div>
                     </div>
                 </div>

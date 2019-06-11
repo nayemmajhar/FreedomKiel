@@ -3,6 +3,7 @@ import { BrowserRouter, Route } from 'react-router-dom';
 import './App.css';
 import Header from './components/Header/index';
 import Footer from './components/Footer';
+import Home from './pages/Home/index'
 
 
 
@@ -20,15 +21,6 @@ function App() {
 			
 		</div>
 	);
-}
-
-
-function Home() {
-  return (
-      <div>
-        <h2>Home</h2>
-      </div>
-  );
 }
 
 function Bikes() {
