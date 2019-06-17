@@ -88,3 +88,17 @@ CREATE TABLE IF NOT EXISTS order_items(
     FOREIGN KEY (bike_id) REFERENCES bikes (id)
 );
 
+CREATE TABLE IF NOT EXISTS comments(
+    id serial NOT NULL PRIMARY KEY,
+	bike_id integer NOT NULL,
+    user_id integer NOT NULL,
+	content text NOT NULL,
+	rating smallint NOT NULL, /* 1 <= rating <= 5 */
+	comment_parent integer NOT NULL default 0,
+    create_date timestamp NOT NULL default now(),
+    modified_date timestamp NOT NULL default now(),
+    status smallint NOT NULL default 1, 
+    FOREIGN KEY (user_id) REFERENCES users (id),
+    FOREIGN KEY (bike_id) REFERENCES bikes (id)
+);
+
