@@ -18,10 +18,38 @@ $router->get('/', function () use ($router) {
 
 $router->group(
     [
-        'prefix' => 'api/users'
+        'prefix' => 'v1/users'
     ], function () use ($router) {
         $router->get('/',  ['uses' => 'UserController@showAllPersons']);
         $router->get('/{username}', ['uses' => 'UserController@showUserByUsername']);
         $router->post('/register', ['uses' => 'UserController@register']);
-        $router->post('/login', ['uses' => 'UserController@login']);
-  });
+        $router->post('/login', ['uses' => 'UserController@postLogin']);
+});
+
+
+$router->group(
+    [
+        'prefix' => 'v1/bikes'
+    ], function () use ($router) {
+        $router->post('/search',  ['uses' => 'BikeController@showSearchedBikes']);
+        $router->post('/add', ['uses' => 'BikeController@addBike']);
+        $router->post('/edit', ['uses' => 'BikeController@EidtBike']);
+        $router->get('/{id}', ['uses' => 'BikeController@showBikeById']);
+        $router->post('/availability', ['uses' => 'BikeController@isBikeAvailabile']);
+});
+
+
+$router->group(
+    [
+        'prefix' => 'v1/orders'
+    ], function () use ($router) {
+    // $router->get('/',  ['uses' => 'UserController@showAllPersons']);
+    $router->get('/{id}', ['uses' => 'OrderController@showOrderById']);
+    $router->post('/create', ['uses' => 'OrderController@createOrder']);
+    $router->post('/payment', ['uses' => 'OrderController@paymenOfOrder']);
+    $router->post('/edit', ['uses' => 'OrderController@updateOrder']);
+
+});
+
+
+
