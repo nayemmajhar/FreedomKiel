@@ -5,10 +5,16 @@ import Logo from './../../Logo/index'
 class FooterBottom extends React.Component {
     render(){
         return(
-            <div id="footer-bottom" className="row">
-                <div className="col-md-12">
-                    <Logo />
-                    <p className="text-center">copyright &copy; 2019, FreedomKiel</p>
+            <div className="py-4 font-weight-light bg-gray-800 text-gray-300">
+                <div className="container">
+                    <div className="row align-items-center">
+                        <div className="col-md-6 text-center text-md-left">
+                            <Logo />
+                        </div>
+                        <div className="col-md-6">
+                            <p className="text-sm mb-md-0 text-md-right">© 2019 Your company.  All rights reserved.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         )
