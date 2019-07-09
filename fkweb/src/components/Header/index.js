@@ -6,22 +6,14 @@ import './css/header.css'
 class Header extends React.Component{
     render(){
         return(
-            <header id="fk-header">
-                <div className="container">
-                    <div className="row">
-                        <div className="col-sm-4">
-                            <Logo />
-                        </div>
-                        <div className="col-sm-8">
-                            <div className="row">
-                                <div className="col-sm-9">
-                                    <Navigation />
-                                </div>
-                                <div className="col-sm-3">Login</div>
-                            </div>
-                        </div>
+            <header className="header">
+                <nav className="navbar navbar-expand-lg fixed-top shadow navbar-light bg-white">
+                    <div className="container">
+                        <Logo />
+                        <button type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" className="navbar-toggler navbar-toggler-right"><i className="fa fa-bars"></i></button>
+                        <Navigation />
                     </div>
-                </div>
+                </nav>
             </header>
         )
     }
