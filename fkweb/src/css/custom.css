@@ -1,0 +1,39 @@
+.navbar-light .navbar-brand{
+    padding: 0px;
+}
+
+.navbar{
+    padding: 12px;
+}
+
+.navbar-brand.py-1{
+    padding: 0!important;
+}
+
+.site-logo{
+    max-height: 48px;
+}
+
+.bc-image-1{
+    background-image: url(../img/banner.jpg);
+    width: 1440px;
+    opacity: 1;
+    transform: translate3d(0px, 0px, 0px);
+    transition-duration: 2000ms;
+}
+
+.swiper-wrapper.dark-overlay{
+    transition-duration: 2000ms;
+}
+
+.card-img-top{
+    max-height: 240px;
+}
+
+.date-control{
+    padding-right: 5px!important;
+}
+
+#booking-form .react-datepicker__input-container{
+    display: block;
+}
