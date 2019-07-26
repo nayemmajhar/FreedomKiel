@@ -5,6 +5,8 @@
 /fkapi/database/migrations
 .idea/
 /fkapi/app/User-copy.php
+/fkapi/vendor
+/fkapi/.idea
 
 # testing
 /fkweb/coverage
