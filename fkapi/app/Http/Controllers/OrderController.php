@@ -21,7 +21,21 @@ class OrderController extends Controller
 
     public function createOrder(Request $request)
     {
-        // order 1 = complete, 2 = hold, -1 = failed
+
+         $request->dropoff_time;
+        $bike_id    = $request->bike_id;
+
+        $user = \App\User::where('id', $request->user_id)->where('auth_token', $request->auth_token)->get()->first();
+        if(!$user){
+            return response(
+                [
+                    'order'   => 9,
+                    'status'  => "success",
+                ],
+                200
+            );
+        }
+
         $startDate  = $request->pickup_time;
         $endDate    = $request->dropoff_time;
         $bike_id    = $request->bike_id;
