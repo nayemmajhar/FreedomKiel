@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 import { Redirect, Link } from 'react-router-dom'
+import freedomKielApi from './../../../helpers/freedomKielApi'
+import axios from 'axios'
 
 class Login extends Component{
 
@@ -7,42 +9,49 @@ class Login extends Component{
         super(props);
 
         this.state = {
-            isLoggedIn: localStorage["fkUserState"] && JSON.parse(localStorage["fkUserState"]).user.auth_token
+            isLoggedIn: localStorage["userAuth"] && JSON.parse(localStorage["userAuth"]).auth_token
                         ? true: false,
-            user: {},
             loginError:false
         }
 
         this.loginFormSubmit = this.loginFormSubmit.bind(this);
-        this.emailField = React.createRef();
-        this.passwordField = React.createRef();
-    }
-
-    componentDidMount(){
-        
-        // let appState2 = {
-        //     isLoggedIn: false,
-        //     user: {
-        //         auth_token: 'asbjd23571$#%W#!VHWU!^'
-        //     }
-        //   };
-        // localStorage["userState"] = JSON.stringify(appState2)
-        // let token = JSON.parse(localStorage["userState"]).user.auth_token
-        // if(token){
-        //     this.setState()
-        // }
-       
+        this.email= React.createRef();
+        this.password = React.createRef();
     }
 
     loginFormSubmit(event){
         event.preventDefault();
 
         let params = {
-            email: this.emailField.current.input.value,
-            password: this.passwordField.current.input.value
+            email: this.email.current.value,
+            password: this.password.current.value
         }
 
-        console.log(params);
+        const url = freedomKielApi.URL + '/users/login';
+
+        axios({
+            method: 'post',
+            url: url,
+            data: params
+        })
+        .then(response => response.data)
+        .then((data) => {
+
+            if(data.success && data.auth.auth_token){
+                localStorage["userAuth"] = JSON.stringify(data.auth)
+                this.setState({
+                    isLoggedIn:true
+                })
+            } else {
+                this.setState({
+                    loginError:true
+                })
+            }
+        }).catch(function (error) {
+            
+        })
+
+        
 
         return;
         
@@ -63,6 +72,13 @@ class Login extends Component{
                             <div className="mb-5">
                                 <h2>Welcome back</h2>
                             </div>
+                            {
+                                this.state.loginError?
+                                <p className="text-center text-secondary"><small>Login failed. Please enter valid email and password.</small></p>
+                                :''
+                            }
+                            
+                            
                             <form className="form-validate" onSubmit={this.loginFormSubmit}>
                             <div className="form-group">
                                 <label htmlFor="loginUsername" className="form-label"> Email Address</label>
@@ -72,8 +88,8 @@ class Login extends Component{
                                     required
                                     data-msg="Please enter your email"
                                     className="form-control"
-                                    name="emailField"
-                                    ref={this.emailField}
+                                    name="email"
+                                    ref={this.email}
                                 />
                             </div>
                             <div className="form-group mb-4">
@@ -87,8 +103,8 @@ class Login extends Component{
                                     required
                                     data-msg="Please enter your password"
                                     className="form-control"
-                                    name="passwordField"
-                                    ref={this.passwordField}
+                                    name="password"
+                                    ref={this.password}
                                 />
                             </div>
                             <button className="btn btn-lg btn-block btn-primary">Sign in</button>

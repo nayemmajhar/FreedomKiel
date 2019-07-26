@@ -2,6 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import freedomKielApi from './../../../helpers/freedomKielApi'
 import DatePicker from "react-datepicker";
+import {Link} from 'react-router-dom'
 
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -20,7 +21,9 @@ class BikeAvailable extends React.Component{
             order: 0,
             order_detail: '',
             startDate: new Date(this.props.pickup),
-            endDate: new Date(this.props.dropoff)
+            endDate: new Date(this.props.dropoff),
+            isLoggedin: localStorage["userAuth"] && JSON.parse(localStorage["userAuth"]).auth_token
+                        ? 1: 3
         }
 
         this.onHandleSumbit             = this.onHandleSumbit.bind(this);
@@ -48,7 +51,6 @@ class BikeAvailable extends React.Component{
         
         const url = freedomKielApi.URL + '/bikes/availability';
         
-        
         axios({
             method: 'post',
             url: url,
@@ -72,41 +74,54 @@ class BikeAvailable extends React.Component{
     onHandleSumbit(event){
         event.preventDefault();
 
-        const {id, pickup, dropoff, rent} = this.state;
+        let userAuth = localStorage["userAuth"]?JSON.parse(localStorage["userAuth"]):''
 
-        const params ={
-            user_id: 414,
-            bike_id: id,
-            pickup_time: pickup,
-            dropoff_time: dropoff,
-            rent_total: rent,
-            payment_methods: 'none'
-        }
+        if(!userAuth){
+            this.setState({
+                isLoggedin: 2
+            })
+        } else {
+            const {id, pickup, dropoff, rent} = this.state;
 
-        const url = freedomKielApi.URL + '/orders/create';
-        
-       
-        axios({
-            method: 'post',
-            url: url,
-            data: params
-        })
-        .then(response => response.data)
-        .then((data) => {
-            if(data.order == -1){
-                this.setState({
-                    order: data.order
-                })
-            } else {
-                this.setState({
-                    order: data.order,
-                    order_detail: data.details
-                })
+            const params ={
+                user_id: userAuth.id,
+                auth_token: userAuth.auth_token,
+                bike_id: id,
+                pickup_time: pickup,
+                dropoff_time: dropoff,
+                rent_total: rent,
+                payment_methods: 'none'
             }
-        
-        }).catch(function (error) {
-            console.log(error);
-        })
+
+            const url = freedomKielApi.URL + '/orders/create';
+            
+            axios({
+                method: 'post',
+                url: url,
+                data: params
+            })
+            .then(response => response.data)
+            .then((data) => {
+                if(data.order == -1){
+                    this.setState({
+                        order: data.order
+                    })
+                } else if(data.order == 9){
+                    this.setState({
+                        isLoggedin: 2
+                    })
+                }else {
+                    this.setState({
+                        order: data.order,
+                        order_detail: data.details
+                    })
+                }
+            
+            }).catch(function (error) {
+                console.log(error);
+            })
+
+        }
     }
 
     onChangeRentandTime(params){
@@ -223,6 +238,11 @@ class BikeAvailable extends React.Component{
                     {
                         order?
                         <div className="form-group" dangerouslySetInnerHTML={{__html: orderHtml}} />
+                        :''
+                    }
+                    {
+                        this.state.isLoggedin === 2?
+                        <p className="text-center text-secondary"><small>Please <Link to="/login">login</Link> to complete your order.</small></p>
                         :''
                     }
                     <p className="text-muted text-sm text-center">Availability is not guaranteed if you arrive at the office without an online booking.</p>

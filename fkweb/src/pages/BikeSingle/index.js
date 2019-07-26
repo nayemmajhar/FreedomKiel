@@ -59,7 +59,7 @@ class BikeSingle extends React.Component{
 		            <div className="row">
 			            <div className="col-lg-8">
                             <div className="text-block">
-                                <p className="text-primary"><i className="fa-map-marker-alt fa mr-1"></i> {bike.address}</p>
+                                <p className="text-primary"><i className="fa-map-marker-alt fa mr-1"></i> {bike.address}, {bike.zip} {bike.city}</p>
                                 <h1>{bike.title}</h1>
                                     <ul className="list-inline text-sm mb-4">
                                         <li className="list-inline-item mr-3"><i className="fas fa-ruler-vertical text-secondary"></i>  {bike.size}cm</li>
