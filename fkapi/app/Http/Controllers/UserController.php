@@ -5,12 +5,13 @@ namespace App\Http\Controllers;
 use App\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Hashing\BcryptHasher;
 use Tymon\JWTAuth\JWTAuth;
+use Illuminate\Hashing\BcryptHasher;
 
 
 class UserController extends Controller
 {
+
     protected $jwt;
 
     public function __construct(JWTAuth $jwt)
@@ -27,12 +28,62 @@ class UserController extends Controller
         return response()->json(User::find($id));
     }
 
+
+    public function postLogin(Request $request)
+    {
+        $this->validate($request, [
+            'email' => 'required|email|max:255',
+            'password' => 'required',
+        ]);
+
+        $email = $request->email;
+        $password = $request->password;
+
+
+        $token = null;
+        $credentials = $request->only('email', 'password');
+
+        $user = \App\User::where('email', $request->email)->get()->first();
+
+        $response = ['success'=>false, 'data'=>'Record doesnt exists'];
+
+        if ($user && (new BcryptHasher)->check($request->password, $user->password)){
+
+            try {
+                if (!$token = $this->jwt->attempt($request->only('email', 'password'))) {
+                    return response()->json([
+                        'response' => 'error',
+                        'message' => 'Password or email is invalid',
+                        'token' => $token,
+                        'success' => false
+                    ]);
+                }else{
+                    $user->auth_token = $token;
+                    $user->save();
+
+                    $response = ['success'=>true, 'auth'=>['id'=>$user->id,'auth_token'=>$user->auth_token,'name'=>$user->username, 'email'=>$user->email]];
+                }
+            } catch (JWTAuthException $e) {
+                return response()->json([
+                    'response' => 'error',
+                    'message' => 'Token creation failed',
+                    'success' => false
+                ]);
+            }
+
+    }
+
+        return response($response,
+            220
+        );
+    }
+
     public function register(Request $request)
     {
         $this->validate(
             $request, [
-                'username'  => 'required',
-                'email'     => 'required|unique:users|email',
+                'username'  => 'required|unique:users',
+                'email'     => 'required|email|unique:users',
                 'password'  => 'required'
             ]
         );
@@ -40,7 +91,7 @@ class UserController extends Controller
         $data = [
             'username'          => $request->username,
             'email'             => $request->email,
-            'activation_key'    => $request->activation_key,
+            'activation_key'    => rand(100000,999999),
             'password'          => (new BcryptHasher)->make($request->password)
         ];
 
@@ -50,8 +101,8 @@ class UserController extends Controller
 
         return response(
             [
-                'data' => $user,
-                'status' => $user ? "success":"error"
+                'user' => $user,
+                'success' => $user ? true:false
             ],
             $statusCode
         );
@@ -63,14 +114,16 @@ class UserController extends Controller
 
         $this->validate(
             $request, [
-                'username' => 'required',
+                'email' => 'email|required',
                 'password' => 'required'
             ]
         );
 
-        $username = $request->username;
+
+
+        $email = $request->email;
         $password = $request->password;
-        $user = User::find($username);
+        $user = User::find($email);
 
         $response = [
             'data' => $user,
@@ -90,37 +143,6 @@ class UserController extends Controller
 
         return response($response, $statusCode);
 
-    }
-
-
-    public function postLogin(Request $request)
-    {
-        $this->validate($request, [
-            'email'    => 'required|email|max:255',
-            'password' => 'required',
-        ]);
-
-        try {
-
-            if (! $token = $this->jwt->attempt($request->only('username', 'password'))) {
-                return response()->json(['user_not_found'], 404);
-            }
-
-        } catch (\Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
-
-            return response()->json(['token_expired'], 500);
-
-        } catch (\Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
-
-            return response()->json(['token_invalid'], 500);
-
-        } catch (\Tymon\JWTAuth\Exceptions\JWTException $e) {
-
-            return response()->json(['token_absent' => $e->getMessage()], 500);
-
-        }
-
-        return response()->json(compact('token'));
     }
 
 }
