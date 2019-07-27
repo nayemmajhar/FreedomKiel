@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
-import { Redirect, Link } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { Redirect, Link, withRouter } from 'react-router-dom'
 import freedomKielApi from './../../../helpers/freedomKielApi'
+import { setLogin } from './../../../actions/index'
 import axios from 'axios'
 
 class Login extends Component{
@@ -9,8 +11,6 @@ class Login extends Component{
         super(props);
 
         this.state = {
-            isLoggedIn: localStorage["userAuth"] && JSON.parse(localStorage["userAuth"]).auth_token
-                        ? true: false,
             loginError:false
         }
 
@@ -39,9 +39,7 @@ class Login extends Component{
 
             if(data.success && data.auth.auth_token){
                 localStorage["userAuth"] = JSON.stringify(data.auth)
-                this.setState({
-                    isLoggedIn:true
-                })
+                this.props.onSetLogIn(true)
             } else {
                 this.setState({
                     loginError:true
@@ -58,7 +56,10 @@ class Login extends Component{
     }
 
     render(){
-        if(this.state.isLoggedIn){
+        const {userAuth} = this.props.state
+        console.log(userAuth);
+        
+        if(userAuth.isLogedIn){
             return(
                 <Redirect to='/profile' />
             )
@@ -120,4 +121,18 @@ class Login extends Component{
     }
 }
 
-export default Login
+const mapStateToProps = (state) => {
+    return{
+        state: state
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return{
+        onSetLogIn:(isLogin) =>{
+            dispatch(setLogin(isLogin))
+        }
+    }
+}
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Login))
